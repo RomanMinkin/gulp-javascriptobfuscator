@@ -1,0 +1,28 @@
+{
+  "name": "gulp-javascriptobfuscator",
+  "version": "0.1.1",
+  "description": "Obfuscate JavasScript via javascriptobfuscator.com. Please DO NOT include any sensitive data.",
+  "email": "tangkhaiphuong@gmail.com",
+  "main": "index.js",
+  "keywords": [
+    "gulp",
+    "gulpplugin",
+    "obfuscate",
+    "obfuscator"
+  ],
+  "author": {
+    "name": "Tang Khai Phuong",
+    "email": "tangkhaiphuong@gmail.com"
+  },
+  "dependencies": {
+    "through2": "*"
+  },
+  "license": "MIT",
+  "readme": "# gulp-javascriptobfuscator\r\n\r\nObfuscate JavasScript via javascriptobfuscator.com. Please DO NOT include any sensitive data.\r\n\r\nInstallation\r\n----\r\n    npm install gulp-javascriptobfuscator\r\nUsage\r\n====\r\n<pre><code>\r\nvar javascriptobfuscator = require('gulp-javascriptobfuscator');\r\n\r\ngulp.task('scripts', function() {\r\n    gulp.src('./lib/*.js')\r\n    .pipe(javascriptobfuscator({\r\n        encodeString: true, // (Optional - default: true)\r\n        encodeNumber: true, // (Optional - default: true)\r\n        replaceNames: true, // (Optional - default: true)\r\n        moveString: true,   // (Optional - default: true)\r\n        exclusions: [\"^_get_\", \"^_set_\", \"^_mtd_\"] // (Optional)\r\n    }))\r\n    .pipe(gulp.dest('./dist/'));\r\n});\r\n</code></pre>\r\n\r\n# License\r\n\r\nMIT\r\n",
+  "_id": "gulp-javascriptobfuscator@0.1.1",
+  "dist": {
+    "shasum": "9d10ff7dcb88a1e4079fa64cbec4212b3feb9c64"
+  },
+  "_from": "gulp-javascriptobfuscator@",
+  "_resolved": "https://registry.npmjs.org/gulp-javascriptobfuscator/-/gulp-javascriptobfuscator-0.1.1.tgz"
+}
