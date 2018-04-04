@@ -1,6 +1,9 @@
 "use strict";
 var http, obfuscate, unescapeHTML;
 
+var _host = "www.javascriptobfuscator.com";
+var _path = "/Javascript-Obfuscator.aspx";
+
 http = require("http");
 
 unescapeHTML = function(str) {
@@ -31,7 +34,7 @@ unescapeHTML = function(str) {
 };
 
 obfuscate = function(source, options, cb) {
-  var item, req, site, _i, _len, _ref;
+  var item, req, _i, _len, _ref;
   if (!options) {
     options = {};
   }
@@ -47,11 +50,11 @@ obfuscate = function(source, options, cb) {
   if (options.exclusions == null) {
     options.exclusions = ["^_get_", "^_set_", "^_mtd_"];
   }
-  site = "www.javascriptobfuscator.com";
+
   req = http.get({
-    hostname: site,
+    hostname: _host,
     port: 80,
-    path: "/"
+    path: _path
   }, function(res) {
     var data;
     res.setEncoding("utf8");
@@ -60,25 +63,29 @@ obfuscate = function(source, options, cb) {
       return data += chunk;
     });
     return res.on("end", function() {
-      var eventValidation, qr, req2, viewState;
+      var eventValidation, qr, req2, viewState, viewstategenerator;
+
       viewState = /id=\"__VIEWSTATE\".+value=\"(.+)\"/.exec(data)[1];
       eventValidation = /id=\"__EVENTVALIDATION\".+value=\"(.+)\"/.exec(data)[1];
+      viewstategenerator = /id=\"__VIEWSTATEGENERATOR\".+value=\"(.+)\"/.exec(data)[1];
+
       qr = require("querystring").stringify({
+        __EVENTTARGET: 'ctl00$MainContent$Button1',
         __VIEWSTATE: viewState,
+        __VIEWSTATEGENERATOR: viewstategenerator,
         __EVENTVALIDATION: eventValidation,
-        TextBox1: source,
-        TextBox2: "",
-        Button1: "Obfuscate",
-        cbEncodeStr: options.encodeString,
-        cbEncodeNumber: options.encodeNumber,
-        cbMoveStr: options.replaceNames,
-        cbReplaceNames: options.moveString,
-        TextBox3: options.exclusions.join("\r\n")
+        ctl00$MainContent$TextBox1: source,
+        ctl00$MainContent$TextBox2: "",
+        ctl00$MainContent$cbEncodeStr: options.encodeString,
+        ctl00$MainContent$cbEncodeNumber: options.encodeNumber,
+        ctl00$MainContent$cbMoveStr: options.replaceNames,
+        ctl00$MainContent$cbReplaceNames: options.moveString,
+        ctl00$MainContent$TextBox3: options.exclusions.join("\r\n")
       });
       req2 = http.request({
-        hostname: site,
+        hostname: _host,
         port: 80,
-        path: "/",
+        path: _path,
         method: "POST",
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -89,11 +96,12 @@ obfuscate = function(source, options, cb) {
         res.on("data", function(chunk) {
           return data += chunk;
         });
+
         return res.on("end", function() {
           var code, ex;
           try {
-            code = /<textarea([^>]+)>\r\n(.+)<\/textarea>/.exec(data);
-            return typeof cb === "function" ? cb(null, unescapeHTML(code[2])) : void 0;
+            code = /<textarea[^>]*id="ctl00_MainContent_TextBox2"[^>]*>[\r\n]*(.+)<\/textarea>/.exec(data);
+            return typeof cb === "function" ? cb(null, unescapeHTML(code[1])) : void 0;
           } catch (_error) {
             ex = _error;
             return typeof cb === "function" ? cb(ex) : void 0;
@@ -136,5 +144,3 @@ module.exports = function(options) {
 };
 
 module.exports.obfuscate = obfuscate;
-
-//# sourceMappingURL=index.map
